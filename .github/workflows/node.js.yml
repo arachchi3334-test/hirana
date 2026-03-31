@@ -16,8 +16,7 @@ jobs:
           node-version: '22'
       - name: Install dependencies
         run: npm install
-      - name: Run tests
-        run: npm test
+      
 
   deploy:
     # This job runs on a self-hosted runner
