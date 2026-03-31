@@ -21,12 +21,21 @@ jobs:
 
   deploy:
     # This job runs on a self-hosted runner
-    runs-on: [self-hosted, linux, deploy-server]
-    needs: build-and-test # This job will only run after 'build-and-test' is complete
+    runs-on: self-hosted
 
     steps:
-      - name: Checkout code
-        # Note: You need to check out the code again because jobs run on separate runners/machines
-        uses: actions/checkout@v4
-      - name: Deploy application
-        run: |
+    - name: Checkout code
+      uses: actions/checkout@v4 # Checks out your repository
+
+    - name: Copy files to web server via rsync
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} # Uses the secret we created
+        SERVER_IP: 54.145.127.9 # Replace with your server's IP
+        SERVER_USER: ubuntu # Replace with your SSH username
+        TARGET_DIR: /var/www/example.com/ # Replace with your website's directory
+      run: |
+         mkdir -p ~/.ssh
+         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+         chmod 600 ~/.ssh/id_rsa
+         ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
+         rsync -rvz --delete ./ $SERVER_USER@$SERVER_IP:$TARGET_DIR
