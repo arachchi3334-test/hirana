@@ -1,7 +1,7 @@
 name: Build and Deploy Node.js Project  
  
 on: [push]
-
+ 
 jobs:
   build-and-test:
     # This job runs on a GitHub-hosted runner 
