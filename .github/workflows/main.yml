@@ -1,0 +1,6 @@
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clean up temporary files
+        run: sudo rm -rf /tmp/*
