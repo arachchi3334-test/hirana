@@ -3,9 +3,30 @@ name: Build and Deploy Node.js Project
 on: [push]
 
 jobs:
-  build:
+  build-and-test:
+    # This job runs on a GitHub-hosted runner
     runs-on: ubuntu-latest
+
     steps:
-      - name: Clean up temporary files
-        run: sudo rm -rf /tmp/*
-  
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - name: Install dependencies
+        run: npm install
+      - name: Run tests
+        run: npm test
+
+  deploy:
+    # This job runs on a self-hosted runner
+    runs-on: [self-hosted, linux, deploy-server]
+    needs: build-and-test # This job will only run after 'build-and-test' is complete
+
+    steps:
+      - name: Checkout code
+        # Note: You need to check out the code again because jobs run on separate runners/machines
+        uses: actions/checkout@v4
+      - name: Deploy application
+        run: |
