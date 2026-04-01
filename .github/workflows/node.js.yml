@@ -4,7 +4,7 @@ on: [push]
  
 jobs:
   build-and-test:
-    # This job runs on a GitHub-hosted runner     
+    # This job runs on a GitHub-hosted runner      
     runs-on: ubuntu-latest  
  
     steps:
