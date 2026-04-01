@@ -34,7 +34,7 @@ jobs:
         TARGET_DIR: /var/www/example.com/ # Replace with your website's directory 
       run: |
          mkdir -p ~/.ssh
-         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_ed25519
-         chmod 600 ~/.ssh/id_ed25519
+         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+         chmod 600 ~/.ssh/id_rsa
          ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
          rsync -rvz --delete ./ $SERVER_USER@$SERVER_IP:$TARGET_DIR
