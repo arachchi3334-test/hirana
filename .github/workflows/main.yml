@@ -1,3 +1,9 @@
+name: Deploy HTML website
+
+on:
+  push:
+    branches:
+      - main # Triggers the workflow on push events to the main branc
 jobs:
   build:
     runs-on: ubuntu-latest
