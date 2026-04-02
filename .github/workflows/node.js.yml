@@ -32,7 +32,7 @@ jobs:
         SERVER_IP: 3.95.160.192  # Replace with your server's IP
         SERVER_USER: ubuntu # Replace with your SSH username
         TARGET_DIR: /var/www/example.com/ # Replace with your website's directory 
-      run: 
+      run: |
          mkdir -p ~/.ssh
          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
          chmod 600 ~/.ssh/id_rsa
