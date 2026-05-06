@@ -25,4 +25,8 @@ jobs:
 
     - name: Download files to S3
       run: |
-          aws s3 cp s3://s3galle/index.html  /var/www/example.com
+         mkdir -p ~/.ssh
+         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+         chmod 600 ~/.ssh/id_rsa
+         ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
+         aws s3 cp s3://s3galle/index.html  /var/www/example.com
