@@ -22,7 +22,17 @@ jobs:
       with:
         role-to-assume: arn:aws:iam::226290659649:role/s3_connectgithub
         aws-region: us-east-1
-
+      env:
+        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} # Uses the secret we created
+        SERVER_IP: 54.145.127.9 # Replace with your server's IP
+        SERVER_USER: ubuntu # Replace with your SSH username
+        TARGET_DIR: /var/www/example.com/ # Replace with your website's directory
+  
     - name: Upload files to S3
       run: |
-        aws s3 cp ./index.html s3://s3galle/
+         mkdir -p ~/.ssh
+         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
+         chmod 600 ~/.ssh/id_rsa
+         ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
+         # rsync -rvz --delete ./ $SERVER_USER@$SERVER_IP:$TARGET_DIR
+         aws s3 sync  s3://s3galle/   /var/www/example.com/
