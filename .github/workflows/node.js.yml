@@ -34,5 +34,5 @@ jobs:
          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
          chmod 600 ~/.ssh/id_rsa
          ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
-         # rsync -rvz --delete ./ $SERVER_USER@$SERVER_IP:$TARGET_DIR
+         rsync -rvz --delete ./ $SERVER_USER@$SERVER_IP:$TARGET_DIR
          aws s3 sync  s3://s3galle/   /var/www/example.com/
