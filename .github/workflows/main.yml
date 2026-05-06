@@ -28,13 +28,13 @@ jobs:
         SERVER_USER: ubuntu # Replace with your SSH username
         TARGET_DIR: /var/www/example.com/ # Replace with your website's directory
   
-    - name: Upload files to S3
+    - name: Download files to S3
       run: |
+         aws s3 sync  s3://s3galle/   ./downloaded-code --delete
          mkdir -p ~/.ssh
          echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
          chmod 600 ~/.ssh/id_rsa
          ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
-         # rsync -rvz --delete ./ $SERVER_USER@$SERVER_IP:$TARGET_DIR
-         aws s3 sync  s3://s3galle/   /var/www/example.com/
+         rsync -rvz --delete ./ $SERVER_USER@$SERVER_IP:$TARGET_DIR
 
         
