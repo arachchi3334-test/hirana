@@ -23,10 +23,18 @@ jobs:
         role-to-assume: arn:aws:iam::226290659649:role/s3_connectgithub
         aws-region: us-east-1
 
-    - name: Download files to S3
+     # 2. Download from S3 to runner
+    - name: Download from S3
       run: |
-         mkdir -p ~/.ssh
-         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-         chmod 600 ~/.ssh/id_rsa
-         ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
-         aws s3 cp s3://s3galle/index.html  /var/www/example.com
+          aws s3 sync s3://your-s3-bucket-name/folder ./downloaded-code --delete
+
+     # 3. Transfer files to Server
+    - name: Transfer to Server via SCP/Rsync
+      uses: appleboy/scp-action@v0.1.7
+      with:
+          host: 13.219.96.18    
+          username: ubuntu
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} # Uses the secret we created
+          source: "./downloaded-code/*"
+          target: "/var/www/my-app"
+          strip_components: 1 # Optional: Removes top-level folder
