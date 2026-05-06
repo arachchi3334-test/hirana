@@ -36,5 +36,5 @@ jobs:
           username: ubuntu
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} # Uses the secret we created
           source: "./downloaded-code/*"
-          target: "/var/www/my-app"
+          target: "/var/www/example.com"
           strip_components: 1 # Optional: Removes top-level folder
