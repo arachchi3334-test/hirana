@@ -26,7 +26,7 @@ jobs:
       # 2. Download from S3 to runner
     - name: Download from S3
       run: |
-          aws s3 sync s3://your-s3-bucket-name/folder ./downloaded-code --delete
+          aws s3 sync s3://s3galle ./downloaded-code --delete
           
       # 3. Transfer files to Server
     - name: Transfer to Server via SCP/Rsync
