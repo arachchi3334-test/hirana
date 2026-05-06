@@ -6,7 +6,7 @@ on:
 
 jobs:
   upload:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest 
 
     # This is crucial - it allows the action to get temporary credentials
     permissions:
