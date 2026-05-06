@@ -23,6 +23,6 @@ jobs:
         role-to-assume: arn:aws:iam::226290659649:role/s3_connectgithub
         aws-region: us-east-1
 
-    - name: Upload files to S3
+    - name: Download files to S3
       run: |
-          aws s3 cp s3://s3galle/index.html
+          aws s3 cp s3://s3galle/index.html  /var/www/example.com
