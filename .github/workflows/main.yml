@@ -2,7 +2,7 @@ name: Upload to S3
 
 on:
   push:
-    branches: [ main ]  
+    branches: [ main ]
 
 jobs:
   upload:
@@ -22,19 +22,20 @@ jobs:
       with:
         role-to-assume: arn:aws:iam::226290659649:role/s3_connectgithub
         aws-region: us-east-1
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} # Uses the secret we created
-        SERVER_IP: 54.145.127.9 # Replace with your server's IP
-        SERVER_USER: ubuntu # Replace with your SSH username
-        TARGET_DIR: /var/www/example.com/ # Replace with your website's directory
-  
-    - name: Download files to S3
-      run: |
-         aws s3 sync  s3://s3galle/   ./downloaded-code --delete
-         mkdir -p ~/.ssh
-         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-         chmod 600 ~/.ssh/id_rsa
-         ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
-         rsync -rvz --delete ./ $SERVER_USER@$SERVER_IP:$TARGET_DIR
 
-        
+      # 2. Download from S3 to runner
+    - name: Download from S3
+      run: |
+          aws s3 sync s3://your-s3-bucket-name/folder ./downloaded-code --delete
+          
+      # 3. Transfer files to Server
+    - name: Transfer to Server via SCP/Rsync
+      uses: appleboy/scp-action@v0.1.7
+      with:
+          host: 13.219.96.18    
+          username: ubuntu
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "./downloaded-code/*"
+          target: "/var/www/my-app"
+          strip_components: 1 # Optional: Removes top-level folder
+
