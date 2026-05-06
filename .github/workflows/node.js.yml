@@ -1,46 +1,28 @@
-name: Build and Deploy Node.js Project     
-   
-on: [push]
- 
-jobs:
-  build-and-test:  
-    # This job runs on a GitHub-hosted runner       
-    runs-on: ubuntu-latest   
- 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4 
-      - name: Setup Node.js environment 
-        uses: actions/setup-node@v4  
-        with:
-          node-version: '22' 
-      - name: Install dependencies 
-        run: npm install
-      
+name: Upload to S3
 
-  deploy:
-    # This job runs on a self-hosted runner 
-    runs-on: self-hosted
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  upload:
+    runs-on: ubuntu-latest
+
+    # This is crucial - it allows the action to get temporary credentials
+    permissions:
+      id-token: write
+      contents: read
 
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4 # Checks out your repository 
+      uses: actions/checkout@v4
 
-    - name: Copy files to web server via rsync
-      env:
-        SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} # Uses the secret we created
-        SERVER_IP: 3.95.160.192  # Replace with your server's IP
-        SERVER_USER: ubuntu # Replace with your SSH username
-        TARGET_DIR: /var/www/example.com/ # Replace with your website's directory 
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::226290659649:role/s3_connectgithub
+        aws-region: us-east-1
+
+    - name: Upload files to S3
       run: |
-         mkdir -p ~/.ssh
-         echo "$SSH_PRIVATE_KEY" > ~/.ssh/id_rsa
-         chmod 600 ~/.ssh/id_rsa
-         ssh-keyscan -H $SERVER_IP >> ~/.ssh/known_hosts
-         rsync -rvz --delete ./ $SERVER_USER@$SERVER_IP:$TARGET_DIR 
-         #npm init -y
-         npm install express
-         node hello.js
-         
-         
-         
+        aws s3 cp ./index.html s3://s3galle/
