@@ -1,12 +1,28 @@
-name: Deploy HTML website
+name: Upload to S3
 
 on:
   push:
-    branches:
-      - main # Triggers the workflow on push events to the main branc
+    branches: [ main ]
+
 jobs:
-  build:
+  upload:
     runs-on: ubuntu-latest
+
+    # This is crucial - it allows the action to get temporary credentials
+    permissions:
+      id-token: write
+      contents: read
+
     steps:
-      - name: Clean up temporary files
-        run: sudo rm -rf /tmp/*
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v4
+      with:
+        role-to-assume: arn:aws:iam::226290659649:role/s3_connectgithub
+        aws-region: us-east-1
+
+    - name: Upload files to S3
+      run: |
+        aws s3 cp ./index.html s3://s3galle/
