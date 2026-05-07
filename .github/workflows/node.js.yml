@@ -19,5 +19,4 @@ jobs:
             # The EC2 instance automatically uses its attached IAM Role
             aws s3 sync s3://s3galle/ /var/www/example.com/ --delete
             
-            # 2. Restart application
-            sudo systemctl restart nginx
+           
