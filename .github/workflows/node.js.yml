@@ -1,40 +1,23 @@
-name: Upload to S3
-
+name: Deploy Code from S3 to EC2
 on:
   push:
-    branches: [ main ] 
+    branches:
+      - main
 
 jobs:
-  upload:
+  deploy:
     runs-on: ubuntu-latest
-
-    # This is crucial - it allows the action to get temporary credentials
-    permissions:
-      id-token: write
-      contents: read
-
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-
-    - name: Configure AWS credentials
-      uses: aws-actions/configure-aws-credentials@v4
-      with:
-        role-to-assume: arn:aws:iam::226290659649:role/s3_connectgithub
-        aws-region: us-east-1
-
-     # 2. Download from S3 to runner
-    - name: Download from S3
-      run: |
-          aws s3 sync s3://s3galle/ ./downloaded-code --delete
-
-     # 3. Transfer files to Server
-    - name: Transfer to Server via SCP/Rsync
-      uses: appleboy/scp-action@v0.1.7
-      with:
+      - name: Deploy via SSH and Role Access
+        uses: appleboy/ssh-action@master
+        with:
           host: 13.219.96.18    
           username: ubuntu
-          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }} # Uses the secret we created
-          source: "./downloaded-code/*"
-          target: "/var/www/example.com"
-          strip_components: 1 # Optional: Removes top-level folder
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          script: |
+            # 1. Sync code from S3 to local folder
+            # The EC2 instance automatically uses its attached IAM Role
+            aws s3 sync s3://my-code-bucket/app/ /var/www/my-app/ --delete
+            
+            # 2. Restart application
+            sudo systemctl restart nginx
