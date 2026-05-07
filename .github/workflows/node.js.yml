@@ -3,7 +3,7 @@ name: Upload to S3
 on:
   push:
     branches: [ main ]
- jobs:
+jobs:
   upload:
     runs-on: ubuntu-latest
 
@@ -25,21 +25,28 @@ on:
     - name: Upload files to S3
       run: |
         aws s3 cp ./index.html s3://s3galle/name: Deploy Code from S3 to EC2  
-
+        
   jobs:   
-   deploy:
-      runs-on: ubuntu-latest
-      steps:
-      - name: Deploy via SSH and Role Access  
-        uses: appleboy/ssh-action@master
-        with:
-          host: 13.219.96.18    
-          username: ubuntu
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            # 1. Sync code from S3 to local folder
+    deploy:
+       runs-on: ubuntu-latest
+       steps: 
+       - name: Deploy via SSH and Role Access  
+         uses: appleboy/ssh-action@master
+         with:
+           host: 13.219.96.18    
+           username: ubuntu
+           key: ${{ secrets.SSH_PRIVATE_KEY }}
+          
+
+     script: |
+           
+               aws s3 sync s3://s3galle/ /var/www/example.com/ --delete
+           #   1. Sync code from S3 to local folder
             # The EC2 instance automatically uses its attached IAM Role
-            aws s3 sync s3://s3galle/ /var/www/example.com/ --delete
+
+            
+           
+
             
             
            
