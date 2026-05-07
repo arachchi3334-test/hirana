@@ -1,5 +1,5 @@
 name: Deploy Code from S3 to EC2  
-on:
+on: 
   push:
     branches:
       - main
