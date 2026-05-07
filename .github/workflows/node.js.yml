@@ -30,7 +30,7 @@ jobs:
 
   deploy:
     needs: upload
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - name: Deploy via SSH and Role Access  
         uses: appleboy/ssh-action@master
