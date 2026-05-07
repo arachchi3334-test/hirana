@@ -8,7 +8,7 @@ jobs:
   upload:
     runs-on: ubuntu-latest
 
-    # This is crucial - it allows the action to get temporary credentials
+    # This is crucial - it allows the action to get temporary credentials 
     permissions:
       id-token: write
       contents: read
