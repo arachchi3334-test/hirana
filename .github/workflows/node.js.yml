@@ -8,7 +8,7 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Deploy via SSH and Role Access 
+      - name: Deploy via SSH and Role Access  
         uses: actions/checkout@v4
         with:
           host: 13.219.96.18    
