@@ -3,8 +3,7 @@ name: Upload to S3
 on:
   push:
     branches: [ main ]
-
-jobs:
+ jobs:
   upload:
     runs-on: ubuntu-latest
 
@@ -27,7 +26,7 @@ jobs:
       run: |
         aws s3 cp ./index.html s3://s3galle/name: Deploy Code from S3 to EC2  
 
-   jobs:   
+  jobs:   
    deploy:
       runs-on: ubuntu-latest
       steps:
