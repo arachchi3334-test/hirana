@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Deploy via SSH and Role Access 
-        uses: appleboy/ssh-action@master
+        uses: actions/checkout@v4
         with:
           host: 13.219.96.18    
           username: ubuntu
