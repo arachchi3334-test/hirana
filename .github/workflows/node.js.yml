@@ -1,4 +1,4 @@
-name: Deploy Code from S3 to EC2
+name: Deploy Code from S3 to EC2 
 on:
   push:
     branches:
